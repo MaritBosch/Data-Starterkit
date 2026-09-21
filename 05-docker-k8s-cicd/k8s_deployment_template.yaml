@@ -1,0 +1,55 @@
+# Basis Deployment + Service: draai een container met 3 replicas en maak 'm
+# intern bereikbaar. Pas <image>, <naam> en de poort aan.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: <naam>-deployment
+  labels:
+    app: <naam>
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: <naam>
+  template:
+    metadata:
+      labels:
+        app: <naam>
+    spec:
+      containers:
+        - name: <naam>
+          image: <registry>/<naam>:<tag>
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: <naam>-service
+spec:
+  selector:
+    app: <naam>
+  ports:
+    - port: 80
+      targetPort: 8080
+  type: ClusterIP
+
+# Handmatig opschalen om te oefenen:
+#   kubectl scale deployment/<naam>-deployment --replicas=3
+# Debuggen als een pod niet start:
+#   kubectl describe pod <pod-naam>
+#   kubectl logs <pod-naam>

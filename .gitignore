@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+.DS_Store
+*.egg-info/
+.ipynb_checkpoints/
+data/raw/
+data/interim/
+*.pkl
+*.joblib
+.pytest_cache/
+node_modules/
+.vscode/
+.idea/
